@@ -119,10 +119,49 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Happiness Rating Range. (Min, Max)
+
+
+class RatingSetting:
+    def __init__(self, range: tuple):
+        """
+        The settings to determine what is the allowable range for a happiness rating to be.
+
+        Please note, the server must be reset for these changes to be impacted when a change is made in the settings file.
+
+        :param range: Example: (1, 10) will allow happiness levels from 1 - 10.
+        """
+        self.range = range
+
+    @property
+    def min(self):
+        return self.range[0]
+
+    @property
+    def max(self):
+        return self.range[1]
+
+    @property
+    def _range_str(self):
+        return f"{self.min} - {self.max}"
+
+    @property
+    def _range_error(self):
+        return f"Allowable Range is [{self._range_str}]"
+
+    def error(self, too_high: bool) -> str:
+        """
+        :param too_high: True is above max range, False is below min range
+        :return: An error message string
+        """
+        additional_error = ["Low", "High"]
+        return f"Rating Too {additional_error[too_high]}. {self._range_error}"
+
+
+RATING_SETTING = RatingSetting((1, 10))
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
