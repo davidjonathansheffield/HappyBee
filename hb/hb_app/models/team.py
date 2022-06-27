@@ -1,6 +1,14 @@
 from django.db import models
 
-from .base import BaseModel
+from .base import BaseModel, BaseQuerySet, BaseManager
+
+
+class TeamQuerySet(BaseQuerySet):
+    pass
+
+
+class TeamManager(BaseManager):
+    pass
 
 
 class Team(BaseModel):
