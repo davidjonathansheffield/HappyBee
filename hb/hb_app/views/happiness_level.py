@@ -23,7 +23,7 @@ class SubmitHappinessAPIView(BaseAuthAPIView):
         if member is None:
             return Response({"error": "User is not on a team. Please request an admin place this user on a team."})
 
-        happiness_level = HappinessLevel.objects.daily_happiness_level(
+        happiness_level = HappinessLevel.objects.record(
             team_member_id=member.id,
         )
 
