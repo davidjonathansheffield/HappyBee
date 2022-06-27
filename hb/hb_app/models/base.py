@@ -1,4 +1,10 @@
+import datetime
+
 from django.db import models
+
+
+class BaseQuerySet(models.QuerySet):
+    pass
 
 
 class BaseManager(models.Manager):
