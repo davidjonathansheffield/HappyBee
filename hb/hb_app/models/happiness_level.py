@@ -4,7 +4,11 @@ from django.utils import timezone
 
 from django.db import models
 
-from .base import BaseModel, BaseManager
+from .base import BaseModel, BaseManager, BaseQuerySet
+
+
+class HappinessLevelQuerySet(BaseQuerySet):
+    pass
 
 
 class HappinessLevelManager(BaseManager):
@@ -59,7 +63,7 @@ class HappinessLevel(BaseModel):
         )
     )
 
-    objects = HappinessLevelManager()
+    objects = HappinessLevelManager.from_queryset(HappinessLevelQuerySet)()
 
 
 __all__ = (
