@@ -17,8 +17,10 @@ class HappinessLevelManager(BaseManager):
         if rating_setting.max < rating:
             raise ValueError(rating_setting.error(too_high=True))
 
-    def daily_happiness_level(self, team_member_id: int, rating: int) -> "HappinessLevel":
+    def record(self, team_member_id: int, rating: int) -> "HappinessLevel":
         """
+        Do not use the create method from Django for HappinessLevels.  This record method is the appropriate way
+        to ensure validation is done prior to logging.
 
         :param team_member_id: The id of the team member to register happiness for today.
         :param rating: The numeric rating for their happiness.  Validated based on RATING_SETTING in hb/settings.py.
@@ -31,6 +33,9 @@ class HappinessLevelManager(BaseManager):
         happiness_level, created = self.get_or_create(
             team_member_id=team_member_id,
             created_at__date=timezone.now().date(),
+            defaults=dict(
+                rating=rating,
+            )
         )
 
         if not created:
