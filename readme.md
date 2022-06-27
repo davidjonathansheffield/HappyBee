@@ -44,3 +44,21 @@ JSON {
 }
 ```
 
+### Token in Authorization Header
+
+For the views below that require authorization, you must include the 
+token you receive from the above mentioned endpoint in your Authorization
+header with each request. 
+
+Example using curl:
+
+```
+curl -X GET http://localhost:8000/happiness/submit/ -H 'Authorization: Token <token>'
+```
+
+### Timezone Settings
+By default, the application is set to run in **UTC** time, this setting can be 
+changed in `hb/settings.py`.  You may want to change this to your local
+time as it determines what time constitutes a day to determine happiness
+recordings.
+
