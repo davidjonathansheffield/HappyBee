@@ -1,3 +1,4 @@
+import random
 from collections import defaultdict
 
 from django.contrib.auth.models import User
@@ -35,7 +36,13 @@ class TeamMemberQuerySet(BaseQuerySet):
 
 
 class TeamMemberManager(BaseManager):
-    pass
+
+    def create_with_test_user(self, **kwargs):
+        random_name = "".join([random.choice('abcdefghijklmnopqrstuvwxyz') for _ in range(25)])
+        return self.create(
+            user=User.objects.create_user(username=random_name, password='12345'),
+            **kwargs,
+        )
 
 
 class TeamMember(BaseModel):

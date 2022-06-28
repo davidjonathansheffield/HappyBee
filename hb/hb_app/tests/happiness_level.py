@@ -9,9 +9,8 @@ class HappinessLevelRecordUnitTests(TestCase):
 
     def setUp(self) -> None:
         self.team = Team.objects.create(name="Test Team")
-        self.team_member = TeamMember.objects.create(
+        self.team_member = TeamMember.objects.create_with_test_user(
             team=self.team,
-            user=User.objects.create_user(username=f'Test User', password='12345')
         )
 
     def test_record_basic(self):
@@ -50,8 +49,7 @@ class HappinessLevelRecordUnitTests(TestCase):
             )
 
     def test_record_succeeds_two_different_team_members(self):
-        other_user = User.objects.create_user(username="Other User", password="12345")
-        other_team_member = TeamMember.objects.create(team=self.team, user=other_user)
+        other_team_member = TeamMember.objects.create_with_test_user(team=self.team)
         HappinessLevel.objects.record(
             team_member_id=self.team_member.id,
             rating=5,

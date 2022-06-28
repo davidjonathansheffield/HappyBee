@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.test import TestCase
 from freezegun import freeze_time
 
@@ -9,9 +8,8 @@ class TeamMemberQuerySetTests(TestCase):
 
     def setUp(self) -> None:
         self.team = Team.objects.create(name="Test Team")
-        self.team_member = TeamMember.objects.create(
+        self.team_member = TeamMember.objects.create_with_test_user(
             team=self.team,
-            user=User.objects.create_user(username=f'Test User', password='12345')
         )
 
     def _record_over_three_dates(self):
@@ -52,4 +50,38 @@ class TeamMemberQuerySetTests(TestCase):
         self.assertEqual(
             team_member.average_happiness,
             6.0,
+        )
+
+    def test_team_members_by_happiness_levels(self):
+        other_team_members = [
+            TeamMember.objects.create_with_test_user(
+                team=self.team,
+            )
+            for _ in range(4)
+        ]
+
+        HappinessLevel.objects.record(
+            team_member_id=self.team_member.id,
+            rating=1,
+        )
+
+        for idx, team_member in enumerate(other_team_members):
+            HappinessLevel.objects.record(
+                team_member_id=team_member.id,
+                rating=idx+2,
+            )
+
+        # An additional TeamMember that has not recorded
+        TeamMember.objects.create_with_test_user(team=self.team)
+
+        self.assertDictEqual(
+            TeamMember.objects.filter(team=self.team).team_members_by_happiness_levels(),
+            {
+                1: 1,
+                2: 1,
+                3: 1,
+                4: 1,
+                5: 1,
+                None: 1,  # Team Member that has never recorded
+            }
         )
