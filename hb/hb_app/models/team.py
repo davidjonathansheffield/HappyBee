@@ -13,6 +13,7 @@ class TeamQuerySet(BaseQuerySet):
         :param self: Is a queryset of Teams
         :return: A dictionary, key is team_id, value is average ratings.
         """
+
         team_ids = self.values_list('id', flat=True)
         team_members = TeamMember.objects.filter(
             team_id__in=team_ids
