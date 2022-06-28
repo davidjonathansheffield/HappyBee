@@ -62,3 +62,80 @@ changed in `hb/settings.py`.  You may want to change this to your local
 time as it determines what time constitutes a day to determine happiness
 recordings.
 
+
+### Endpoint Usage
+
+#### Submit Happiness Level Endpoint
+
+`Authorization Required`
+
+Endpoint
+```
+POST /happiness/submit/  
+JSON {
+    "rating": [1 - 10] (By default, range is changable in hb/settings.py)    
+}
+```
+
+Response
+```
+JSON {
+    "success": true,
+    "id": <id_of_log>,
+    "team_member": <tm_id>,
+    "rating": <rating>
+}
+```
+
+
+Description
+
+An authenticated user may **POST** to the above endpoint and register 
+their happiness rating for the day.  If there is an already existing happiness 
+rating it will trigger an error.  If the rating is outside the bounds, it 
+will throw an error.
+
+Will return details about the HappinessLevel recorded.
+
+
+#### Team Stats Endpoint
+
+`Authorization Optional`
+
+Endpoint
+
+```
+GET /team/stats/
+```
+
+Response
+
+The Response will differ if the user is authenticated.
+
+Authenticated User Response
+
+```
+{
+    "<Team Name>": {
+        "average": <average>,
+        "member_count_by_level": {
+            "null": 1,
+            "6": 3,
+            "7": 2,
+        }
+    }
+}
+```
+
+Please note, a `null` value in `member_count_by_level` indicates how many team
+members have never registered their happiness levels.
+
+Unauthenticated User Response
+
+```
+{
+    "all_teams_average": <average>
+}
+```
+
+Will fetch an average across all teams.
