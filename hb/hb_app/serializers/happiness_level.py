@@ -1,3 +1,4 @@
+
 from rest_framework import serializers
 
 from hb_app.models import HappinessLevel
@@ -7,20 +8,11 @@ from .base import BaseSerializer
 class SubmitHappinessSerializer(BaseSerializer):
     rating = serializers.IntegerField()
 
-    @staticmethod
-    def get_member(requesting_user):
-        try:
-            return requesting_user.member
-        except AttributeError:
-            member = None
-
-        return member
-
     def validate(self, attrs):
-        member = self.get_member(self.requesting_user)
+        member = self.get_requesting_user_member()
 
         if member is None:
-            raise ValueError("User is not on a team. Please request an admin place this user on a team.")
+            raise ValueError("Requesting User Is Not On A Team. Please Ask An Admin To Place This User On A Team.")
 
         attrs['team_member_id'] = member.id
         return attrs
@@ -32,14 +24,9 @@ class SubmitHappinessSerializer(BaseSerializer):
                 rating=validated_data.get('rating'),
             )
         except ValueError as e:
-            return {
-                'errors': e.args,
-                'success': False,
-            }
+            return self.error_dict(e)
 
-        return {
-            'created_at': happiness_level.created_at,
-            'rating': happiness_level.rating,
-            'success': True,
-            'team_member_id': happiness_level.team_member_id,
-        }
+        return self.success_dict(**self.model_to_dict(happiness_level))
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError
