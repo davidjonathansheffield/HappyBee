@@ -4,7 +4,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from enums import RequestMethodEnum
+from hb_app.enums import RequestMethodEnum
 
 
 class BaseAPIView(APIView):
