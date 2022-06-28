@@ -1,6 +1,6 @@
-from enums import RequestMethodEnum
-from serializers.team import TeamStatsSerializer
-from views.base import BaseAPIView
+from hb_app.enums import RequestMethodEnum
+from hb_app.serializers import TeamStatsSerializer
+from .base import BaseAPIView
 
 
 class TeamStatsAPIView(BaseAPIView):
