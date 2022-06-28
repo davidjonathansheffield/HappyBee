@@ -30,3 +30,8 @@ class SubmitHappinessSerializer(BaseSerializer):
 
     def update(self, instance, validated_data):
         raise NotImplementedError
+
+
+__all__ = (
+    'SubmitHappinessSerializer',
+)
