@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -8,6 +10,11 @@ from .happiness_level import HappinessLevel
 
 class TeamMemberQuerySet(BaseQuerySet):
 
+    def annotate_average_happiness(self):
+        return self.annotate(
+            average_happiness=models.Avg('levels__rating'),
+        )
+
     def annotate_latest_happiness(self):
         return self.annotate(
             latest_happiness=models.Subquery(
@@ -17,10 +24,14 @@ class TeamMemberQuerySet(BaseQuerySet):
             )
         )
 
-    def annotate_average_happiness(self):
-        return self.annotate(
-            average_happiness=models.Avg('levels__rating'),
-        )
+    def team_members_by_happiness_levels(self):
+        team_members = self.annotate_latest_happiness()
+        team_members_by_happiness_levels = defaultdict(int)
+
+        for team_member in team_members:
+            team_members_by_happiness_levels[team_member.latest_happiness] += 1
+
+        return team_members_by_happiness_levels
 
 
 class TeamMemberManager(BaseManager):
