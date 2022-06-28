@@ -6,4 +6,5 @@ from hb_app.views import *
 urlpatterns = [
     path('api-token-auth/', views.obtain_auth_token),
     path('happiness/submit/', SubmitHappinessAPIView.as_view()),
+    path('team/stats/', TeamStatsAPIView.as_view()),
 ]
